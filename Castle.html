@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script type="text/javascript">
+        function generateArray() {
+            let length = parseInt(document.getElementById("int-array").value, 10);
+            if (length < 0) {
+                alert("The length of array can't be negative!");
+                return;
+            }
+
+            let intArray = Array.from({ length: length }, () => Math.floor(Math.random() * 50));
+
+            let count = countPeaks(intArray);
+            document.getElementById("displaycount").innerHTML = count.toString();
+
+            document.getElementById("displayarray").innerHTML = intArray.map(String).toString();
+
+            var canvas = document.getElementById("myCanvas");
+            var theContext = canvas.getContext("2d");
+
+            var width = 500;
+            var height = 60;
+            var offset = (1 / (intArray.length - 1)) * width;
+
+            theContext.clearRect(0, 0, width, height)
+            theContext.strokeRect(0, 0, width, height)
+
+            theContext.beginPath();
+            theContext.moveTo(0, 60 - intArray[0]);
+            for (var x = 1; x < intArray.length; x++) {
+                theContext.lineTo(x * offset, 60 - intArray[x]);
+            }
+            theContext.stroke();
+        }
+
+        function countPeaks(arr) {
+            let count = 1;
+            let direction = arr[0] > arr[0] ? -1 : 1;
+            for (var i = 0; i < arr.length - 1; i++) {
+                if ((arr[i + 1] - arr[i]) * direction > 0) {
+                    direction *= -1;
+                    if (direction == 1) {
+                        count++;
+                    }
+                }
+            }
+
+            return count;
+        }
+    </script>
+</head>
+
+<body>
+    <h3>Part 1: Aequilibrium | The Castle Company</h3>
+    <hr />
+    <div style="margin-top: 20px;">
+        please input length of the array:&nbsp;
+        <input id="int-array" type="number" value="20" style="text-align: right">
+        <button type="button" onclick="generateArray()">Draw Array</button>
+    </div>
+    <div style="margin-top: 20px;">
+        The array generated:&nbsp;<span id="displayarray"></span>
+    </div>
+    <div style="margin-top: 20px;">
+        <div>Count the peaks. (The first one is always considered as a peak)</div>
+        <canvas id="myCanvas" width="500" height="60" style="border: 1px solid #ddd;">Your browser does not support the
+            HTML5 canvas tag
+        </canvas>        
+    </div>
+    <div style="margin-top: 20px;">
+        The amount of castles to be built:&nbsp;<span id="displaycount"></span>
+    </div>
+</body>
+
+</html>
